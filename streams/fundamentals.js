@@ -1,6 +1,6 @@
 import { Readable, Writable, Transform } from "node:stream";
 
-class OneToHundredStream extends Readable {
+export class OneToHundredStream extends Readable {
   index = 1;
 
   _read() {
