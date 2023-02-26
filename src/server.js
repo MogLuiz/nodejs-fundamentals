@@ -8,10 +8,14 @@ const server = http.createServer(async (request, response) => {
   await transformBuffersStreamsToJson(request, response);
 
   const route = routes.find(
-    (route) => route.method === method && route.path === url
+    (route) => route.method === method && route.path.test(url)
   );
 
-  if (route) return route.handler(request, response);
+  if (route) {
+    const routeParams = request.url.match(route.path);
+    request.params = { ...routeParams.groups };
+    return route.handler(request, response);
+  }
 
   return response.writeHead(404).end("");
 });
