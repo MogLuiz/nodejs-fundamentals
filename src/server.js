@@ -1,7 +1,7 @@
 import http from "http";
-import { randomUUID } from "node:crypto";
 import { Database } from "./database.js";
 import { transformBuffersStreamsToJson } from "./middlewares/transformBuffersStreamsToJson.js";
+import { routes } from "./routes.js";
 
 const database = new Database();
 
@@ -10,25 +10,11 @@ const server = http.createServer(async (request, response) => {
 
   await transformBuffersStreamsToJson(request, response);
 
-  if (method === "GET" && url === "/users") {
-    const users = database.select("users");
+  const route = routes.find(
+    (route) => route.method === method && route.path === url
+  );
 
-    return response.end(JSON.stringify(users));
-  }
-
-  if (method === "POST" && url === "/users") {
-    const { name, email } = request.body;
-
-    const user = {
-      id: randomUUID(),
-      name,
-      email,
-    };
-
-    database.insert("users", user);
-
-    return response.writeHead(201).end("Usuário criado com sucesso!");
-  }
+  if (route) return route.handler(request, response);
 
   return response.writeHead(404).end("");
 });
