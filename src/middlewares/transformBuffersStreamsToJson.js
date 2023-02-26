@@ -10,4 +10,6 @@ export async function transformBuffersStreamsToJson(request, response) {
   } catch {
     request.body = null;
   }
+
+  response.setHeader("Content-type", "application/json");
 }

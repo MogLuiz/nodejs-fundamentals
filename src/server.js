@@ -9,9 +9,7 @@ const server = http.createServer(async (request, response) => {
   await transformBuffersStreamsToJson(request, response);
 
   if (method === "GET" && url === "/users") {
-    return response
-      .setHeader("Content-type", "application/json")
-      .end(JSON.stringify(users));
+    return response.end(JSON.stringify(users));
   }
 
   if (method === "POST" && url === "/users") {
