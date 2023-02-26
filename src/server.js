@@ -1,21 +1,12 @@
 import http from "http";
+import { transformBuffersStreamsToJson } from "./middlewares/transformBuffersStreamsToJson.js";
 
 const users = [];
 
 const server = http.createServer(async (request, response) => {
   const { method, url } = request;
 
-  const buffers = [];
-
-  for await (const chunk of request) {
-    buffers.push(chunk);
-  }
-
-  try {
-    request.body = JSON.parse(Buffer.concat(buffers).toString());
-  } catch {
-    request.body = null;
-  }
+  await transformBuffersStreamsToJson(request, response);
 
   if (method === "GET" && url === "/users") {
     return response
