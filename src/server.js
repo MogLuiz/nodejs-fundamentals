@@ -1,9 +1,6 @@
 import http from "http";
-import { Database } from "./database.js";
-import { transformBuffersStreamsToJson } from "./middlewares/transformBuffersStreamsToJson.js";
 import { routes } from "./routes.js";
-
-const database = new Database();
+import { transformBuffersStreamsToJson } from "./middlewares/transformBuffersStreamsToJson.js";
 
 const server = http.createServer(async (request, response) => {
   const { method, url } = request;
